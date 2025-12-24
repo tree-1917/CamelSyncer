@@ -16,37 +16,45 @@ trap cleanup EXIT
 # == create docfile function 
 create_docfile() {
   local docfile_name=$(gum input --placeholder="Enter Your Docfile Name?")
+
+  # Ensure that the user did not click Esc or leave the name blank
+  if [[ -z "$docfile_name" ]]; then return; fi
+
   mkdir -p "$VAULTPATH/$docfile_name"
   $IDE "$VAULTPATH/$docfile_name/$docfile_name.md"
 }
 
 # == update docfile function 
 update_docfile() {
-  [[ ! -d "$VAULTPATH" || ! $(ls -A $VAULTPATH ]]  printf "Empty Vault" && return 
+  [[ ! -d "$VAULTPATH" || -z "$(ls -A "$VAULTPATH" 2>/dev/null)" ]] && { printf "Empty Vault\n"; sleep 1; return; }
   local docfile_path=$(gum file "$VAULTPATH")
-  $IDE $docfile_path
+  [[ -n "$docfile_path" ]]&& $IDE "$docfile_path"
 }
 
 # == delete docfile function
 delete_docfile() {
-  [[ ! -d "$VAULTPATH" || ! $(ls -A $VAULTPATH ]]  printf "Empty Vault" && return 
+  [[ ! -d "$VAULTPATH" || -z "$(ls -A "$VAULTPATH" 2>/dev/null)" ]] && { printf "Empty Vault\n"; sleep 1; return; }
+
   local docfile_path=$(gum file "$VAULTPATH")
   docfile_name=$(basename $docfile_path) 
-  rm -rf $VAULTPATH/$docfile_name 
+
+   gum confirm "Are you sure you want to delete this doc?" && rm -rf $VAULTPATH/$docfile_name 
 }
 
 # == list docfile function 
 list_docfiles() {
-  [[ ! -d "$VAULTPATH" || ! $(ls -A $VAULTPATH ]]  printf "Empty Vault" && return 
+  [[ ! -d "$VAULTPATH" || -z "$(ls -A "$VAULTPATH" 2>/dev/null)" ]] && { printf "Empty Vault\n"; sleep 1; return; }
+
   local docfile_path=$(gum file "$VAULTPATH")
-  gum pager < $docfile_path
+
+  [[ -n "$docfile_path" ]] && gum pager < "$docfile_path"
 }
 # == update 
 # == main function 
 main ()
 {
   clear
-  [[ ! -d "$VAULTPATH" ]] && mkdir -p $VAULTPATH
+  [[ ! -d "$VAULTPATH" ]] && mkdir -p "$VAULTPATH"
 
 
   while true; do 
@@ -55,23 +63,15 @@ main ()
       --foreground 212 --border-foreground 212 --border double \
       --align center --width 50 --margin "1 2" --padding "2 4" \
       "$VAULTNAME" "Manager for your docfile file for project with you everywhere until servers"
-    option=$(gum choose "create docfile" "delete docfile" "delete docfile" "list docfiles" "exit") 
+
+    option=$(gum choose "create docfile" "update docfile" "delete docfile" "list docfiles" "exit") 
+    
     case $option in 
-      "create docfile" )
-        create_docfile
-        ;;
-      "delete docfile" )
-        delete_docfile 
-        ;; 
-      "update docfile") 
-        update_docfile 
-        ;; 
-      "list docfiles") 
-        list_docfiles 
-        ;; 
-      "exit")
-        exit 0
-        ;;
+      "create docfile" ) create_docfile ;;
+      "update docfile" ) update_docfile ;; 
+      "delete docfile" ) delete_docfile ;; 
+      "list docfiles"  ) list_docfiles ;; 
+      "exit") exit 0 ;;
     esac
   done
 }
