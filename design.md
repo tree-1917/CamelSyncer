@@ -2,8 +2,7 @@
 
 > Objective 
 
-create a project that will be a centerlize location to store our docfile for
-project and can sync between more than remote location ... 
+- Create a centralized vault to store project docfiles and sync them across multiple remote locations.
 
 > Modeling 
 
@@ -30,5 +29,5 @@ classDiagram
 
     %% notes %% 
 
-    note for Docfile "will store this in way "docfile/docfile" to make a
-    deletion in o(1) and use inode for linux systme
+    note for Docfile "Store docfile in like 'docfile/docfile' to make a
+    deletion in o(1) and use inode for linux system"
