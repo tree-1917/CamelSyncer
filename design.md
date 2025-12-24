@@ -9,18 +9,19 @@
 ```mermaid 
 classDiagram 
     class CamelSyncer ~Main Class~ {
-        +String vault_name
+        +String  vault_name
         +Pointer vault_path 
+        +Pointer ide 
         +list() 
         +clean()
     }
 
     class Docfile {
-        +String docfile_name 
+        +String  docfile_name 
         +Pointer docfile_path
-        +create_docfile 
-        +delete_docfile
-        +update_docfile
+        +create_docfile()
+        +delete_docfile()
+        +update_docfile()
     }
 
     %% relationship %% 
@@ -28,6 +29,5 @@ classDiagram
 
 
     %% notes %% 
-
     note for Docfile "Store docfile in like 'docfile/docfile' to make a
     deletion in o(1) and use inode for linux system"
