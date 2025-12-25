@@ -4,6 +4,7 @@
 It helps you create, organize, update, and manage project documentation files from
 a **single centralized place**, directly from your terminal.
 
+![CamelSyncer](./CamelSyncer.png)
 ---
 
 ## ✨ Features
