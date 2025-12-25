@@ -68,7 +68,7 @@ main ()
     clear 
     gum style \
       --foreground 212 --border-foreground 212 --border double \
-      --align center --width 50 --margin "1 2" --padding "2 4" \
+      --align center --width 100 --margin "1 2" --padding "2 4" \
       "$VAULTNAME" "Manager for your docfile file for project with you everywhere until servers"
 
     option=$(gum choose "create docfile" "update docfile" "delete docfile" "list docfiles" "exit") 
