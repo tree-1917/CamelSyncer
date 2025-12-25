@@ -8,6 +8,7 @@ set -euo pipefail
 VAULTNAME="CAMELSYNCER"
 VAULTPATH="./$VAULTNAME"
 IDE="$EDITOR" # global linux system variable to open default editor 
+GUMFILER="gum file --padding '1' $VAULTPATH"
 
 # === cleanup function === #
 cleanup () {
@@ -19,10 +20,7 @@ trap cleanup EXIT
 # === create docfile function === #
 create_docfile() {
   local docfile_name=$(gum input --placeholder="Enter Your Docfile Name?")
-
-  # Ensure that the user did not click Esc or leave the name blank
   if [[ -z "$docfile_name" ]]; then return; fi
-
   mkdir -p "$VAULTPATH/$docfile_name"
   $IDE "$VAULTPATH/$docfile_name/$docfile_name.md"
 }
@@ -30,23 +28,34 @@ create_docfile() {
 # === update docfile function === # 
 update_docfile() {
   [[ ! -d "$VAULTPATH" || -z "$(ls -A "$VAULTPATH" 2>/dev/null)" ]] && { printf "Empty Vault\n"; sleep 1; return; }
-  local docfile_path=$(gum file "$VAULTPATH")
+  local docfile_path=$(eval "$GUMFILER")
   [[ -n "$docfile_path" ]]&& $IDE "$docfile_path"
 }
 
 # === delete docfile function === # 
 delete_docfile() {
   [[ ! -d "$VAULTPATH" || -z "$(ls -A "$VAULTPATH" 2>/dev/null)" ]] && { printf "Empty Vault\n"; sleep 1; return; }
-  local docfile_path=$(gum file "$VAULTPATH")
-  docfile_name=$(basename $docfile_path) 
+  local docfile_path=$(eval "$GUMFILER")
+  docfile_name=$(basename $docfile_path | sed 's/\.md//') 
+  printf $docfile_name >> log.txt
   gum confirm "Are you sure you want to delete this doc?" && rm -rf $VAULTPATH/$docfile_name 
 }
 
 # === list docfile function === #
 list_docfiles() {
   [[ ! -d "$VAULTPATH" || -z "$(ls -A "$VAULTPATH" 2>/dev/null)" ]] && { printf "Empty Vault\n"; sleep 1; return; }
-  local docfile_path=$(gum file "$VAULTPATH")
+  local docfile_path=$(eval "$GUMFILER")
   [[ -n "$docfile_path" ]] && gum pager < "$docfile_path"
+}
+
+# === bulid articfate === # 
+build_artifacte () {
+  printf "build articfate tar.gz file which password" 
+}
+
+# === sync github === # 
+sync_github() {
+  printf "sync with github" 
 }
 
 # === main function  === # 
