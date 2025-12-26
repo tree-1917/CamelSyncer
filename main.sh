@@ -50,11 +50,15 @@ list_docfiles() {
 
 # === bulid articfate === # 
 build_artifacte () {
+  # need to tar.gz for vault dir 
+  # need to encryption for this tar.gz with "gpg" key 
   printf "build articfate tar.gz file which password" 
 }
 
 # === sync github === # 
 sync_github() {
+  # need to sync and tar.gz.gpg file with private repo 
+  # need to sync as one way sync
   printf "sync with github" 
 }
 
