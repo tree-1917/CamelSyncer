@@ -36,9 +36,20 @@ update_docfile() {
 delete_docfile() {
   [[ ! -d "$VAULTPATH" || -z "$(ls -A "$VAULTPATH" 2>/dev/null)" ]] && { printf "Empty Vault\n"; sleep 1; return; }
   local docfile_path=$(eval "$GUMFILER")
-  docfile_name=$(basename $docfile_path | sed 's/\.md//') 
-  printf $docfile_name >> log.txt
-  gum confirm "Are you sure you want to delete this doc?" && rm -rf $VAULTPATH/$docfile_name 
+
+# Exit gracefully if the user presses Esc or cancels
+  [[ -z "$docfile_path" ]] && return
+
+  if [[ -f "$docfile_path" && "$docfile_path" == *"$VAULTNAME"* ]]; then
+	gum confirm "Delete this file?" && {
+	rm "$docfile_path"
+	rmdir "$(dirname "$docfile_path")" 2>/dev/null
+	gum toast --status success "Deleted successfully"
+	}
+  else
+	  printf "Error: Invalid path or file not found."
+	  sleep 3
+  fi
 }
 
 # === list docfile function === #
